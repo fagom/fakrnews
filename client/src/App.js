@@ -1,11 +1,16 @@
 import "./App.css";
 
-function App() {
-  return (
-    <div className="App">
-      <h1>Skeleton Code</h1>
-    </div>
-  );
+import React, { Component } from "react";
+import NewsFeed from "./pages/NewsFeed/NewsFeed";
+
+class App extends Component {
+  render() {
+    return (
+      <div>
+        <NewsFeed />
+      </div>
+    );
+  }
 }
 
 export default App;
