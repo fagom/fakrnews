@@ -17,38 +17,26 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const PostModel = mongoose_1.default.model("Fkn_Posts_detail");
 const base_error_class_1 = require("../common/base-error-class");
 const router = express_1.default.Router();
-router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { posttitle, _user, fullname, firstname, surname, profilePic, userbio, username, userIconColor, } = req.body;
-    const newpost = new PostModel({
-        posttitle,
-        _user,
-        fullname,
-        firstname,
-        surname,
-        profilePic,
-        userbio,
-        username,
-        userIconColor,
-    });
-    try {
-        newpost.save();
-        res.status(200).send({
-            _id: newpost.get("_id"),
-            posttitle: newpost.get("posttitle"),
-            postcreateddate: newpost.get("postcreateddate"),
-            _user: newpost.get("_user"),
-            fullname: newpost.get("fullname"),
-            firstname: newpost.get("firstname"),
-            surname: newpost.get("surname"),
-            profilePic: newpost.get("profilePic"),
-            userbio: newpost.get("userbio"),
-            username: newpost.get("username"),
-            userIconColor: newpost.get("userIconColor"),
-        });
+router.get("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const _id = req.params.id;
+    const existingPost = yield PostModel.findOne({ _id: _id, poststatus: "A" });
+    if (!existingPost) {
+        const errinstance = new base_error_class_1.ErrorClass("PostNotFound", 404, "Page Not Found");
+        res.status(404).send(errinstance.parseMessage());
     }
-    catch (e) {
-        const errinstance = new base_error_class_1.ErrorClass("ServerError", 500, "Oops something went wrong. Try again later");
-        res.status(500).send(errinstance.parseMessage());
+    else {
+        res.status(200).send({
+            posttitle: existingPost.get("posttitle"),
+            postcreateddate: existingPost.get("postcreateddate"),
+            _user: existingPost.get("_user"),
+            fullname: existingPost.get("fullname"),
+            firstname: existingPost.get("firstname"),
+            surname: existingPost.get("surname"),
+            profilePic: existingPost.get("profilePic"),
+            userbio: existingPost.get("userbio"),
+            username: existingPost.get("username"),
+            userIconColor: existingPost.get("userIconColor"),
+        });
     }
 }));
 module.exports = router;

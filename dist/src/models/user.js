@@ -14,7 +14,10 @@ const UserSchema = new Schema({
     profilePic: String,
     createddate: { type: Date, default: new Date() },
     modifieddate: { type: Date, default: new Date() },
-    firsttimelogin: { type: String, default: "A" },
+    firsttimelogin: { type: String, default: "Y" },
     userbio: { type: String },
+    username: { type: String },
+    userstatus: { type: String, default: "A" },
+    userIconColor: { type: String, default: "#000000" },
 });
 module.exports = mongoose_1.default.model("Fkn_user_details", UserSchema, "Fkn_user_details");

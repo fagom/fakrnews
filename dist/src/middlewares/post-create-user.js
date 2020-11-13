@@ -46,6 +46,7 @@ router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 surname: newUser.get("surname"),
                 profilePic: newUser.get("profilePic"),
                 firsttimelogin: newUser.get("firsttimelogin"),
+                userIconColor: newUser.get("userIconColor"),
             });
         }
         catch (e) {

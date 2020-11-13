@@ -48,6 +48,7 @@ router.post("/", async (req, res) => {
         surname: newUser.get("surname"),
         profilePic: newUser.get("profilePic"),
         firsttimelogin: newUser.get("firsttimelogin"),
+        userIconColor: newUser.get("userIconColor"),
       });
     } catch (e) {
       const errinstance = new ErrorClass(
