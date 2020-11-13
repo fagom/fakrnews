@@ -1,5 +1,4 @@
 import express from "express";
-import mongoose from "mongoose";
 
 const PostCreateMiddleWare = require("../middlewares/post-create-post");
 const PostUpdateMiddleware = require("../middlewares/post-update-post");
