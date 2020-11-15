@@ -4,8 +4,9 @@
 }
 .post__yes {
   height: 30px !important;
-  width: 10px !important;
-  background-color: red !important;
+  /* width: 10px !important; */
+  background-color: #007ee5 !important;
+  box-shadow: 0.5px 0.5px 3px 0.1px black;
   display: flex;
   align-items: center;
   justify-content: left;
@@ -15,12 +16,17 @@
 }
 .post__no {
   height: 30px !important;
-  width: 150px !important;
-  background-color: green !important;
+  /* width: 150px !important; */
+  background-color: #007ee5 !important;
+  box-shadow: 0.5px 0.5px 3px 0.1px black;
   border-radius: 5px;
   display: flex;
   align-items: center;
   justify-content: left;
   padding-left: 2px;
   margin-top: 5px;
+}
+a {
+  text-decoration: none;
+  color: blue;
 }

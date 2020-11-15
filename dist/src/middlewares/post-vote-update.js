@@ -28,6 +28,8 @@ router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         existingVote.set("votevalue", votevalue);
         existingVote.set("modifeddate", new Date());
         existingVote.set("__v", existingVote.get("__v") + 1);
+        existingVote.save();
+        res.status(200).send(existingVote);
     }
     else {
         const errinstance = new base_error_class_1.ErrorClass("VoteNotExists", 500, "Oops, something went wrong. Refresh and try again.");

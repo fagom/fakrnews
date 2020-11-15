@@ -18,15 +18,17 @@ router.post("/", async (req, res) => {
     const errinstance = new ErrorClass(
       "VoteExists",
       500,
-      "Oops, something went wrong. Refresh and try again."
+      "Oops, you seem to have voted. Refresh and try again."
     );
     res.status(500).send(errinstance.parseMessage());
   } else {
     const newVote = new VoteModel({
-      _post: ObjectId(_post),
-      _user: ObjectId(_user),
+      _post: _post,
+      _user: _user,
       votevalue: votevalue,
     });
+    newVote.save();
+    res.status(200).send(newVote);
   }
 });
 

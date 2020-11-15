@@ -18,6 +18,8 @@ router.post("/", async (req, res) => {
     existingVote.set("votevalue", votevalue);
     existingVote.set("modifeddate", new Date());
     existingVote.set("__v", existingVote.get("__v") + 1);
+    existingVote.save();
+    res.status(200).send(existingVote);
   } else {
     const errinstance = new ErrorClass(
       "VoteNotExists",
