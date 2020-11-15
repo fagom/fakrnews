@@ -66,6 +66,9 @@ class NewsFeed extends Component {
                   <PostCard
                     key={index}
                     fullname={post.fullname}
+                    firstname={post.firstname}
+                    surname={post.surname}
+                    userIconColor={post.userIconColor}
                     createddate={post.postmodifeddate}
                     posttitle={post.posttitle}
                     totalvotes={post.totalvotes}

@@ -16,21 +16,22 @@ router.get("/:id", async (req, res) => {
 
   if (user) {
     res.status(200).send({
-      fullname: user.get("fullname"),
-      firstname: user.get("firstname"),
-      surname: user.get("surname"),
-      profilePic: user.get("profilePic"),
-      firsttimelogin: user.get("firsttimelogin"),
-      userbio: user.get("userbio"),
-      username: user.get("username"),
+      description: "Username Exists",
+      // fullname: user.get("fullname"),
+      // firstname: user.get("firstname"),
+      // surname: user.get("surname"),
+      // profilePic: user.get("profilePic"),
+      // firsttimelogin: user.get("firsttimelogin"),
+      // userbio: user.get("userbio"),
+      // username: user.get("username"),
     });
   } else {
     const errinstance = new ErrorClass(
       "UserNotFound",
-      400,
+      204,
       "user doesnot exist"
     );
-    res.status(400).send(errinstance.parseMessage());
+    res.status(204).send(errinstance.parseMessage());
   }
 });
 

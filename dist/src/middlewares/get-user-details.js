@@ -25,18 +25,12 @@ router.get("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     });
     if (user) {
         res.status(200).send({
-            fullname: user.get("fullname"),
-            firstname: user.get("firstname"),
-            surname: user.get("surname"),
-            profilePic: user.get("profilePic"),
-            firsttimelogin: user.get("firsttimelogin"),
-            userbio: user.get("userbio"),
-            username: user.get("username"),
+            description: "Username Exists",
         });
     }
     else {
-        const errinstance = new base_error_class_1.ErrorClass("UserNotFound", 400, "user doesnot exist");
-        res.status(400).send(errinstance.parseMessage());
+        const errinstance = new base_error_class_1.ErrorClass("UserNotFound", 204, "user doesnot exist");
+        res.status(204).send(errinstance.parseMessage());
     }
 }));
 module.exports = router;

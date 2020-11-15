@@ -17,6 +17,7 @@ router.post("/", async (req, res) => {
     profilePic,
     username,
     userIconColor,
+    firsttimelogin,
   } = req.body;
 
   if (!emailid || !fullname || !firstname || !surname) {
@@ -42,6 +43,7 @@ router.post("/", async (req, res) => {
       user.set("profilePic", profilePic);
       user.set("username", username);
       user.set("userIconColor", userIconColor);
+      user.set("firsttimelogin", firsttimelogin);
 
       let version = user.get("__v");
       user.set("__v", version + 1);

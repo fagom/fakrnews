@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import FirstTimeLogin from "../FirstTimeLogin/FirstTimeLogin";
 import LoginPage from "../LoginPage/LoginPage";
 import NewsFeed from "../NewsFeed/NewsFeed";
 class HomePage extends Component {
@@ -10,6 +11,12 @@ class HomePage extends Component {
       return (
         <div>
           <LoginPage />
+        </div>
+      );
+    } else if (this.props.auth.firsttimelogin === "Y") {
+      return (
+        <div>
+          <FirstTimeLogin />
         </div>
       );
     }

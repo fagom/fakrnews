@@ -20,6 +20,9 @@ export default class PostCard extends Component {
     createddate: null,
     voted: false,
     fullname: "",
+    firstname: "",
+    surname: "",
+    userIconColor: "",
     createddate: "",
     posttitle: "",
     totalvotes: 0,
@@ -36,6 +39,9 @@ export default class PostCard extends Component {
       totalvotes: this.props.totalvotes,
       votecount: this.props.votecount,
       voted: this.props.uservotedvalue === null ? false : true,
+      firstname: this.props.firstname,
+      surname: this.props.surname,
+      userIconColor: this.props.userIconColor,
       uservotedvalue: this.props.uservotedvalue,
     });
   }
@@ -88,15 +94,21 @@ export default class PostCard extends Component {
     //console.log(response);
   };
 
-  postRefresh = () => {};
-
   render() {
     return (
       <div style={{ marginTop: "1em" }}>
         <Card elevation={1}>
           <CardContent>
             <div style={{ display: "flex" }}>
-              <Avatar style={{ width: "55px", height: "55px" }}>123</Avatar>
+              <Avatar
+                style={{
+                  width: "55px",
+                  height: "55px",
+                  backgroundColor: this.state.userIconColor,
+                }}
+              >
+                {this.state.firstname[0] + this.state.surname[0]}
+              </Avatar>
               <div style={{ paddingLeft: "6px" }}>
                 {this.state.fullname}
                 <div style={{ fontSize: "14px", color: "grey" }}>

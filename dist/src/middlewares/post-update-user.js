@@ -19,7 +19,7 @@ const UserModel = mongoose_1.default.model("Fkn_user_details");
 const base_error_class_1 = require("../common/base-error-class");
 router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("update");
-    const { _id, fullname, firstname, surname, emailid, profilePic, username, userIconColor, } = req.body;
+    const { _id, fullname, firstname, surname, emailid, profilePic, username, userIconColor, firsttimelogin, } = req.body;
     if (!emailid || !fullname || !firstname || !surname) {
         const errinstance = new base_error_class_1.ErrorClass("BadData", 400, "Invalid Data provided");
         res.status(400).send(errinstance.parseMessage());
@@ -38,6 +38,7 @@ router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             user.set("profilePic", profilePic);
             user.set("username", username);
             user.set("userIconColor", userIconColor);
+            user.set("firsttimelogin", firsttimelogin);
             let version = user.get("__v");
             user.set("__v", version + 1);
             yield user.save();
