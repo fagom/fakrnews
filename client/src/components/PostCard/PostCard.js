@@ -14,8 +14,11 @@ import Linkify from "react-linkify";
 import ThumbUpIcon from "@material-ui/icons/ThumbUp";
 import ThumbDownIcon from "@material-ui/icons/ThumbDown";
 import axios from "axios";
-export default class PostCard extends Component {
-  MAX_WIDTH = window.innerWidth > 760 ? 300 : window.innerWidth;
+import { withRouter } from "react-router-dom";
+import Popover from "@material-ui/core/Popover";
+class PostCard extends Component {
+  MAX_WIDTH = window.innerWidth > 760 ? 250 : 100;
+
   state = {
     createddate: null,
     voted: false,
@@ -28,6 +31,7 @@ export default class PostCard extends Component {
     totalvotes: 0,
     votecount: [],
     uservotedvalue: null,
+    popoveropen: false,
   };
   componentDidMount() {
     moment.updateLocale("en", null);
@@ -47,6 +51,10 @@ export default class PostCard extends Component {
   }
 
   votePost = async (value) => {
+    console.log("post", this.props.curruser, this.state);
+    if (this.props.curruser === null || this.props.curruser === false) {
+      this.props.history.push("/");
+    }
     if (this.state.voted) {
       const response = await axios.post("/api/vote/update", {
         _post: this.props._post,
@@ -96,9 +104,9 @@ export default class PostCard extends Component {
 
   render() {
     return (
-      <div style={{ marginTop: "1em" }}>
-        <Card elevation={1}>
-          <CardContent>
+      <div style={{ marginTop: "1em", padding: "10px" }}>
+        <Card elevation={5}>
+          <CardContent onClick={() => this.setState({ popoveropen: true })}>
             <div style={{ display: "flex" }}>
               <Avatar
                 style={{
@@ -109,13 +117,21 @@ export default class PostCard extends Component {
               >
                 {this.state.firstname[0] + this.state.surname[0]}
               </Avatar>
-              <div style={{ paddingLeft: "6px" }}>
+              <div style={{ paddingLeft: "6px", fontWeight: "900" }}>
                 {this.state.fullname}
-                <div style={{ fontSize: "14px", color: "grey" }}>
+                <div
+                  style={{
+                    fontSize: "14px",
+                    color: "grey",
+                    fontWeight: "normal",
+                  }}
+                >
                   <Moment fromNow>{this.state.createddate}</Moment>
                 </div>
               </div>
             </div>
+          </CardContent>
+          <CardContent style={{ paddingTop: "0px", paddingBottom: "0px" }}>
             <div className="post__title">
               <Linkify>{this.state.posttitle}</Linkify>
             </div>
@@ -228,3 +244,4 @@ export default class PostCard extends Component {
     );
   }
 }
+export default withRouter(PostCard);

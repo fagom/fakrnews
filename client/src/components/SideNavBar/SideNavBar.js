@@ -8,6 +8,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
 import { TextField } from "@material-ui/core";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,14 +25,16 @@ const useStyles = makeStyles((theme) => ({
       fontSize: "1em",
       fontWeight: "bold",
       width: "10em",
-      color: "white",
-      backgroundColor: "#007ee5",
+      color: "black",
+      // backgroundColor: "#007ee5",
       borderRadius: "3px",
       padding: "10px",
       cursor: "pointer",
+      border: "1px solid green",
       "&:hover": {
-        backgroundColor: "red",
-        width: "11em",
+        backgroundColor: "green",
+        color: "white",
+        // width: "11em",
       },
     },
   },
@@ -44,14 +47,16 @@ const useStyles = makeStyles((theme) => ({
       fontSize: "1em",
       fontWeight: "bold",
       width: "10em",
-      color: "white",
-      backgroundColor: "green",
+      color: "black",
+      // backgroundColor: "green",
       borderRadius: "3px",
       padding: "10px",
       cursor: "pointer",
+      border: "1px solid green",
       "&:hover": {
-        backgroundColor: "red",
-        width: "11em",
+        backgroundColor: "green",
+        color: "white",
+        // width: "11em",
       },
     },
   },
@@ -64,14 +69,16 @@ const useStyles = makeStyles((theme) => ({
       fontSize: "1em",
       fontWeight: "bold",
       width: "10em",
-      color: "white",
-      backgroundColor: "green",
+      color: "black",
+      // backgroundColor: "green",
       borderRadius: "3px",
       padding: "10px",
       cursor: "pointer",
+      border: "1px solid green",
       "&:hover": {
-        backgroundColor: "red",
-        width: "11em",
+        backgroundColor: "green",
+        color: "white",
+        // width: "11em",
       },
     },
   },
@@ -89,10 +96,11 @@ const useStyles = makeStyles((theme) => ({
       borderRadius: "3px",
       padding: "10px",
       cursor: "pointer",
+      border: "1px solid green",
       "&:hover": {
-        backgroundColor: "red",
+        backgroundColor: "green",
         color: "white",
-        width: "11em",
+        // width: "11em",
       },
     },
   },
@@ -141,12 +149,23 @@ function SideNavBar(props) {
   const classes = useStyles();
   return (
     <div className={classes.root}>
-      <div className={classes.home}>Home</div>
+      <div>
+        <Link className={classes.home} to="/">
+          Home
+        </Link>
+      </div>
       <div className={classes.create} onClick={handleClickOpen}>
         Create
       </div>
       <div className={classes.create}>Notifications</div>
-      <div className={classes.profile}>Profile</div>
+      <div>
+        <Link
+          className={classes.profile}
+          to={`/profile/${props.auth.username}`}
+        >
+          Profile
+        </Link>
+      </div>
       <div className={classes.more}>More</div>
       <Dialog
         maxWidth={"xs"}
@@ -175,6 +194,7 @@ function SideNavBar(props) {
             placeholder="Whats Fake today?"
             value={post}
             onChange={onPostChange}
+            inputProps={{ maxLength: 500 }}
           />
           <h4>Tips:</h4>
           <h5>1. Try to provide the Link of the source for a better result.</h5>

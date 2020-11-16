@@ -1,6 +1,8 @@
 .post__title {
   padding-top: 5px;
   padding-bottom: 5px;
+  text-align: left;
+  word-wrap: break-word;
 }
 .post__yes {
   height: 30px !important;

@@ -17,25 +17,75 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const PostModel = mongoose_1.default.model("Fkn_Posts_detail");
 const base_error_class_1 = require("../common/base-error-class");
 const router = express_1.default.Router();
-router.get("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const _id = req.params.id;
-    const existingPost = yield PostModel.findOne({ _id: _id, poststatus: "A" });
+const ObjectId = mongoose_1.default.Types.ObjectId;
+router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const _id = req.body._id;
+    const _user = req.body._user;
+    const existingPost = yield PostModel.findOne({
+        _id: ObjectId(_id),
+        poststatus: "A",
+    });
     if (!existingPost) {
         const errinstance = new base_error_class_1.ErrorClass("PostNotFound", 404, "Page Not Found");
         res.status(404).send(errinstance.parseMessage());
     }
     else {
-        res.status(200).send({
-            posttitle: existingPost.get("posttitle"),
-            postcreateddate: existingPost.get("postcreateddate"),
-            _user: existingPost.get("_user"),
-            fullname: existingPost.get("fullname"),
-            firstname: existingPost.get("firstname"),
-            surname: existingPost.get("surname"),
-            profilePic: existingPost.get("profilePic"),
-            userbio: existingPost.get("userbio"),
-            username: existingPost.get("username"),
-            userIconColor: existingPost.get("userIconColor"),
+        const dbres = yield PostModel.aggregate([
+            {
+                $match: {
+                    _id: ObjectId(_id),
+                },
+            },
+            {
+                $lookup: {
+                    from: "Fkn_vote_details",
+                    localField: "_id",
+                    foreignField: "_post",
+                    as: "votes",
+                },
+            },
+            {
+                $sort: {
+                    postcreateddate: -1,
+                },
+            },
+        ]).exec((err, result) => {
+            //console.log(result[0].votes);
+            //console.log("result", result);
+            if (result) {
+                for (var i = 0; i < result.length; i++) {
+                    const vote = result[i].votes;
+                    let totalVotes = 0;
+                    let votecount = Array(2);
+                    //console.log("votecount", votecount);
+                    let voted = false;
+                    totalVotes = vote.length;
+                    result[i].uservotedvalue = null;
+                    for (var j = 0; j < vote.length; j++) {
+                        //totalVotes = totalVotes + 1;
+                        voted = vote[j]._user == _user ? true : false;
+                        if (voted) {
+                            result[i].voted = true;
+                            result[i].uservotedvalue = vote[j].votevalue;
+                        }
+                    }
+                    // console.log(votecount.length, vote);
+                    for (var j = 0; j < votecount.length; j++) {
+                        votecount[j] = 0;
+                        vote.map((o) => (o.votevalue === j ? (votecount[j] += 1) : 0));
+                        // console.log(currcount);
+                        // votecount[j] = optioncount === undefined ? 0 : optioncount.length;
+                    }
+                    //console.log("votevalue", totalVotes, vote.length);
+                    result[i].totalvotes = vote.length;
+                    result[i].votecount = votecount;
+                    result[i].votes = null;
+                }
+            }
+            const finalResult = {
+                result: result,
+            };
+            res.status(200).send(JSON.stringify(finalResult));
         });
     }
 }));

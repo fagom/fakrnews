@@ -7,8 +7,11 @@ import * as actions from "../../actions";
 import { connect } from "react-redux";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { Avatar } from "@material-ui/core";
+import Moment from "react-moment";
+import moment from "moment";
 
-class NewsFeed extends Component {
+class ProfilePage extends Component {
   state = {
     posts: [],
     limit: 50,
@@ -63,6 +66,32 @@ class NewsFeed extends Component {
             </Grid>
             <Grid item xs={12} md={9}>
               <Grid container>
+                <Grid item xs={12}>
+                  <div style={{ display: "flex" }}>
+                    <Avatar
+                      style={{
+                        width: "55px",
+                        height: "55px",
+                        backgroundColor: this.state.userIconColor,
+                      }}
+                    >
+                      {this.props.auth.firstname[0] +
+                        this.props.auth.surname[0]}
+                    </Avatar>
+                    <div style={{ paddingLeft: "6px", fontWeight: "900" }}>
+                      {this.props.auth.fullname}
+                      <div
+                        style={{
+                          fontSize: "14px",
+                          color: "grey",
+                          fontWeight: "normal",
+                        }}
+                      >
+                        @fagom2-38
+                      </div>
+                    </div>
+                  </div>
+                </Grid>
                 <Grid item xs={12} md={4} lg={4}>
                   {this.state.posts.map((post, index) => {
                     if (index % 3 === 0) {
@@ -146,4 +175,4 @@ function mapStateToProps(state) {
     auth: state.auth,
   };
 }
-export default connect(mapStateToProps)(NewsFeed);
+export default connect(mapStateToProps)(ProfilePage);
