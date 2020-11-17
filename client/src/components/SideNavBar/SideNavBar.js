@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 
 import Dialog from "@material-ui/core/Dialog";
@@ -9,6 +9,7 @@ import Button from "@material-ui/core/Button";
 import { TextField } from "@material-ui/core";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import uuid from "react-uuid";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -127,9 +128,12 @@ function SideNavBar(props) {
     setPost(value);
   };
 
+  // useEffect(() => {
+  //   console.log("sda");
+  //   setOpen(false);
+  //   setPost("");
+  // });
   const createPost = async () => {
-    console.log(post);
-    console.log(props.auth);
     const body = {
       posttitle: post,
       _user: props.auth._id,
@@ -141,9 +145,26 @@ function SideNavBar(props) {
       username: props.auth.username,
       userIconColor: props.auth.userIconColor,
     };
-    console.log("body", body);
+
     const response = await axios.post("/api/post/create", body);
-    console.log(response.data);
+
+    if (response.status === 200) {
+      let refresh = props.refreshScreen;
+      refresh();
+      //setOpen(false);
+      //setPost("");
+    }
+  };
+
+  const profileTargetLink = {
+    pathname:
+      props.auth === null || props.auth === false
+        ? "/"
+        : `/profile/${props.auth.username}`,
+    key: uuid(),
+    state: {
+      applied: true,
+    },
   };
 
   const classes = useStyles();
@@ -157,16 +178,19 @@ function SideNavBar(props) {
       <div className={classes.create} onClick={handleClickOpen}>
         Create
       </div>
-      <div className={classes.create}>Notifications</div>
+      <div className={classes.create}>Explore</div>
+      <div className={classes.create}>Activity</div>
+
       <div>
-        <Link
-          className={classes.profile}
-          to={`/profile/${props.auth.username}`}
-        >
+        <Link className={classes.profile} to={profileTargetLink}>
           Profile
         </Link>
       </div>
-      <div className={classes.more}>More</div>
+      <div>
+        <a href="/api/logout" className={classes.more}>
+          Logout
+        </a>
+      </div>
       <Dialog
         maxWidth={"xs"}
         fullWidth={true}

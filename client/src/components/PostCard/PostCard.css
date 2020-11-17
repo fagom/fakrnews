@@ -3,6 +3,7 @@
   padding-bottom: 5px;
   text-align: left;
   word-wrap: break-word;
+  white-space: pre-line;
 }
 .post__yes {
   height: 30px !important;

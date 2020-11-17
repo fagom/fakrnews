@@ -11,9 +11,11 @@ class FirstTimeLogin extends Component {
     surname: this.props.auth.surname,
     colorIndex: 0,
     userIconColor: this.COLORS[0],
-    username: "",
-    buttonDisable: true,
+    username: this.props.auth.username,
+    buttonDisable: this.props.buttonDisable,
     usernameHelperText: "Username must be between 6 and 30 characters.",
+    disabled: this.props.disabled,
+    userbio: this.props.auth.userbio || "",
   };
   iconChooser = (value) => {
     this.setState({ colorIndex: value, userIconColor: this.COLORS[value] });
@@ -39,6 +41,13 @@ class FirstTimeLogin extends Component {
       btndisable = true;
     }
     this.setState({ firstname: changevalue, buttonDisable: btndisable });
+  };
+  userbioChange = (event) => {
+    let changevalue = event.target.value;
+
+    this.setState({
+      userbio: changevalue,
+    });
   };
   userNameChange = (event) => {
     let changevalue = event.target.value;
@@ -75,7 +84,7 @@ class FirstTimeLogin extends Component {
   updateUserDetails = async () => {
     const usernamecheck = await axios.get(`/api/user/${this.state.username}`);
 
-    if (usernamecheck.status === 200) {
+    if (usernamecheck.status === 200 && this.props.pagename === "homepage") {
       this.setState({ usernameHelperText: "Username already exists." });
     } else {
       const updateresponse = await axios.post("/api/user/update", {
@@ -87,40 +96,62 @@ class FirstTimeLogin extends Component {
         profilePic: this.props.auth.profilePic,
         username: this.state.username,
         userIconColor: this.state.userIconColor,
+        userbio: this.state.userbio,
         firsttimelogin: "N",
       });
       if (updateresponse.status === 200) {
         let fetchuser = this.props.fetchUser;
-
         fetchuser();
+        this.props.successEdit();
       }
     }
   };
   render() {
     return (
       <div>
-        <NavBar />
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
+        {this.props.navbarVisible === true ? (
+          <div>
+            <NavBar />
+            <br></br>
+            <br></br>
+            <br></br>
+          </div>
+        ) : null}
         <Container maxWidth="sm">
-          <h2>Personal Information</h2>
+          <Grid container style={{ paddingTop: "0px", marginTop: "0px" }}>
+            <Grid item xs={12} style={{ paddingTop: "0px", marginTop: "0px" }}>
+              <h3 style={{ paddingTop: "0px", marginTop: "0px" }}>
+                Personal Information
+              </h3>
+            </Grid>
+          </Grid>
           <Grid container>
-            <Grid item xs={6}>
+            <Grid
+              item
+              xs={12}
+              md={6}
+              style={{ marginTop: "20px", width: "100%" }}
+            >
               <TextField
                 variant="outlined"
                 label="First Name"
                 value={this.state.firstname}
                 onChange={this.firstNameChange}
+                style={{ width: "100%" }}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid
+              item
+              xs={12}
+              md={6}
+              style={{ marginTop: "20px", width: "100%" }}
+            >
               <TextField
                 variant="outlined"
                 label="Surname"
                 value={this.state.surname}
                 onChange={this.surnameChange}
+                style={{ width: "100%" }}
               />
             </Grid>
           </Grid>
@@ -132,17 +163,31 @@ class FirstTimeLogin extends Component {
                 value={this.state.username}
                 onChange={this.userNameChange}
                 helperText={this.state.usernameHelperText}
+                disabled={this.state.disabled}
+                style={{ width: "100%" }}
               />
             </Grid>
           </Grid>
           <Grid container style={{ marginTop: "20px" }}>
             <Grid item xs={12}>
-              <h2>Choose a color for your profile Icon</h2>
+              <TextField
+                variant="outlined"
+                label="Bio"
+                value={this.state.userbio}
+                onChange={this.userbioChange}
+                style={{ width: "100%" }}
+                inputProps={{ maxLength: 500 }}
+              />
+            </Grid>
+          </Grid>
+          <Grid container style={{ marginTop: "20px" }}>
+            <Grid item xs={12}>
+              <h3>Choose a color for your profile Icon</h3>
             </Grid>
             {this.COLORS.map((color, index) => {
               if (index === this.state.colorIndex) {
                 return (
-                  <Grid item xs={2} key={index}>
+                  <Grid item xs={3} md={2} key={index}>
                     <Avatar
                       style={{
                         width: "37px",
@@ -159,7 +204,7 @@ class FirstTimeLogin extends Component {
                 );
               }
               return (
-                <Grid item xs={2} key={index}>
+                <Grid item xs={3} md={2} key={index}>
                   <Avatar
                     style={{
                       width: "40px",

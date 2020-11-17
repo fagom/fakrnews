@@ -17,13 +17,15 @@ router.get("/:id", async (req, res) => {
   if (user) {
     res.status(200).send({
       description: "Username Exists",
-      // fullname: user.get("fullname"),
-      // firstname: user.get("firstname"),
-      // surname: user.get("surname"),
+      fullname: user.get("fullname"),
+      firstname: user.get("firstname"),
+      surname: user.get("surname"),
       // profilePic: user.get("profilePic"),
       // firsttimelogin: user.get("firsttimelogin"),
-      // userbio: user.get("userbio"),
-      // username: user.get("username"),
+      userbio: user.get("userbio"),
+      username: user.get("username"),
+      userIconColor: user.get("userIconColor"),
+      _id: user.get("_id"),
     });
   } else {
     const errinstance = new ErrorClass(

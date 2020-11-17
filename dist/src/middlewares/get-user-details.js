@@ -26,6 +26,15 @@ router.get("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     if (user) {
         res.status(200).send({
             description: "Username Exists",
+            fullname: user.get("fullname"),
+            firstname: user.get("firstname"),
+            surname: user.get("surname"),
+            // profilePic: user.get("profilePic"),
+            // firsttimelogin: user.get("firsttimelogin"),
+            userbio: user.get("userbio"),
+            username: user.get("username"),
+            userIconColor: user.get("userIconColor"),
+            _id: user.get("_id"),
         });
     }
     else {

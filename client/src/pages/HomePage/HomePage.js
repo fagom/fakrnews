@@ -16,7 +16,12 @@ class HomePage extends Component {
     } else if (this.props.auth.firsttimelogin === "Y") {
       return (
         <div>
-          <FirstTimeLogin />
+          <FirstTimeLogin
+            buttonDisable={true}
+            disabled={false}
+            navbarVisible={true}
+            pagename="homepage"
+          />
         </div>
       );
     }

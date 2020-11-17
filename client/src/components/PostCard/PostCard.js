@@ -14,7 +14,7 @@ import Linkify from "react-linkify";
 import ThumbUpIcon from "@material-ui/icons/ThumbUp";
 import ThumbDownIcon from "@material-ui/icons/ThumbDown";
 import axios from "axios";
-import { withRouter } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import Popover from "@material-ui/core/Popover";
 class PostCard extends Component {
   MAX_WIDTH = window.innerWidth > 760 ? 250 : 100;
@@ -32,6 +32,7 @@ class PostCard extends Component {
     votecount: [],
     uservotedvalue: null,
     popoveropen: false,
+    username: "",
   };
   componentDidMount() {
     moment.updateLocale("en", null);
@@ -47,6 +48,7 @@ class PostCard extends Component {
       surname: this.props.surname,
       userIconColor: this.props.userIconColor,
       uservotedvalue: this.props.uservotedvalue,
+      username: this.props.username,
     });
   }
 
@@ -107,29 +109,37 @@ class PostCard extends Component {
       <div style={{ marginTop: "1em", padding: "10px" }}>
         <Card elevation={5}>
           <CardContent onClick={() => this.setState({ popoveropen: true })}>
-            <div style={{ display: "flex" }}>
-              <Avatar
-                style={{
-                  width: "55px",
-                  height: "55px",
-                  backgroundColor: this.state.userIconColor,
-                }}
-              >
-                {this.state.firstname[0] + this.state.surname[0]}
-              </Avatar>
-              <div style={{ paddingLeft: "6px", fontWeight: "900" }}>
-                {this.state.fullname}
-                <div
+            <Link to={`/profile/${this.state.username}`}>
+              <div style={{ display: "flex" }}>
+                <Avatar
                   style={{
-                    fontSize: "14px",
-                    color: "grey",
-                    fontWeight: "normal",
+                    width: "55px",
+                    height: "55px",
+                    backgroundColor: this.state.userIconColor,
                   }}
                 >
-                  <Moment fromNow>{this.state.createddate}</Moment>
+                  {this.state.firstname[0] + this.state.surname[0]}
+                </Avatar>
+                <div
+                  style={{
+                    paddingLeft: "6px",
+                    fontWeight: "900",
+                    color: "black",
+                  }}
+                >
+                  {this.state.fullname}
+                  <div
+                    style={{
+                      fontSize: "14px",
+                      color: "grey",
+                      fontWeight: "normal",
+                    }}
+                  >
+                    <Moment fromNow>{this.state.createddate}</Moment>
+                  </div>
                 </div>
               </div>
-            </div>
+            </Link>
           </CardContent>
           <CardContent style={{ paddingTop: "0px", paddingBottom: "0px" }}>
             <div className="post__title">
@@ -143,7 +153,7 @@ class PostCard extends Component {
                 style={{
                   fontSize: "15px",
                   fontWeight: "bold",
-                  color: this.state.uservotedvalue === 1 ? "#cd201f" : "black",
+                  color: this.state.uservotedvalue === 1 ? "green" : "black",
                 }}
               >
                 Yes /{" "}
@@ -173,7 +183,7 @@ class PostCard extends Component {
                 style={{
                   fontSize: "15px",
                   fontWeight: "bold",
-                  color: this.state.uservotedvalue === 0 ? "#cd201f" : "black",
+                  color: this.state.uservotedvalue === 0 ? "green" : "black",
                 }}
               >
                 No /{" "}
@@ -211,7 +221,7 @@ class PostCard extends Component {
                     style={{
                       //backgroundColor: "#007ee5",
                       color:
-                        this.state.uservotedvalue === 1 ? "#cd201f" : "#007ee5",
+                        this.state.uservotedvalue === 1 ? "green" : "#007ee5",
                       borderRadius: "20px",
                       fontWeight: "800",
                     }}
@@ -226,7 +236,7 @@ class PostCard extends Component {
                     style={{
                       //backgroundColor: "#007ee5",
                       color:
-                        this.state.uservotedvalue === 0 ? "#cd201f" : "#007ee5",
+                        this.state.uservotedvalue === 0 ? "green" : "#007ee5",
                       borderRadius: "20px",
                       fontWeight: "800",
                       borderRadius: "20px",

@@ -18,6 +18,7 @@ router.post("/", async (req, res) => {
     username,
     userIconColor,
     firsttimelogin,
+    userbio,
   } = req.body;
 
   if (!emailid || !fullname || !firstname || !surname) {
@@ -44,6 +45,7 @@ router.post("/", async (req, res) => {
       user.set("username", username);
       user.set("userIconColor", userIconColor);
       user.set("firsttimelogin", firsttimelogin);
+      user.set("userbio", userbio);
 
       let version = user.get("__v");
       user.set("__v", version + 1);
@@ -59,6 +61,7 @@ router.post("/", async (req, res) => {
         firsttimelogin: user.get("firsttimelogin"),
         username: user.get("username"),
         userIconColor: user.get("userIconColor"),
+        userbio: user.get("userbio"),
       });
     } catch (e) {
       console.log(e);

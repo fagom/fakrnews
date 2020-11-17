@@ -15,7 +15,7 @@ class NewsFeed extends Component {
     page: 1,
     loading: true,
   };
-  async componentDidMount() {
+  fetchData = async () => {
     const response = await axios.post("/api/post/feed", {
       _user: this.props.auth._id,
       limit: this.state.limit,
@@ -27,7 +27,16 @@ class NewsFeed extends Component {
       page: response.data.nextPage.page,
       loading: false,
     });
+  };
+  componentDidMount() {
+    this.fetchData();
   }
+
+  refreshScreen = () => {
+    this.setState({ limit: 50, page: 1, loading: true });
+    this.fetchData();
+  };
+
   render() {
     if (this.state.loading) {
       return (
@@ -39,7 +48,10 @@ class NewsFeed extends Component {
           <br></br>
           <Grid container>
             <Grid item xs={12} md={4}>
-              <SideNavBar auth={this.props.auth} />
+              <SideNavBar
+                auth={this.props.auth}
+                refreshScreen={this.refreshScreen}
+              />
             </Grid>
             <Grid item xs={12} md={4}>
               <h5>Loading....</h5>
@@ -59,7 +71,10 @@ class NewsFeed extends Component {
         <div>
           <Grid container>
             <Grid item xs={12} md={3} lg={2}>
-              <SideNavBar auth={this.props.auth} />
+              <SideNavBar
+                auth={this.props.auth}
+                refreshScreen={this.refreshScreen}
+              />
             </Grid>
             <Grid item xs={12} md={9}>
               <Grid container>
@@ -80,6 +95,7 @@ class NewsFeed extends Component {
                           uservotedvalue={post.uservotedvalue}
                           curruser={this.props.auth}
                           _post={post._id}
+                          username={post.username}
                         />
                       );
                     }
@@ -103,6 +119,7 @@ class NewsFeed extends Component {
                           uservotedvalue={post.uservotedvalue}
                           curruser={this.props.auth}
                           _post={post._id}
+                          username={post.username}
                         />
                       );
                     }
@@ -126,6 +143,7 @@ class NewsFeed extends Component {
                           uservotedvalue={post.uservotedvalue}
                           curruser={this.props.auth}
                           _post={post._id}
+                          username={post.username}
                         />
                       );
                     }

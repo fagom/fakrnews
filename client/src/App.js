@@ -7,6 +7,7 @@ import { BrowserRouter, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage/HomePage";
 import PostDetails from "./pages/PostDetails/PostDetails";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
+import uuid from "react-uuid";
 
 class App extends Component {
   componentDidMount() {
@@ -19,7 +20,13 @@ class App extends Component {
         <BrowserRouter>
           <Route path="/" exact component={HomePage} />
           <Route path="/post/:id" exact component={PostDetails} />
-          <Route path="/profile/:id" exact component={ProfilePage} />
+          <Route
+            path="/profile/:id"
+            exact
+            render={(props) => (
+              <ProfilePage key={uuid()} id={props.match.params.id} />
+            )}
+          />
         </BrowserRouter>
       </div>
     );
