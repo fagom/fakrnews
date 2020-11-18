@@ -56,8 +56,8 @@ class ProfilePage extends Component {
         userbio: userresp.data.userbio,
         userIconColor: userresp.data.userIconColor,
         editprofile: false,
-        // limit: 50,
-        // page: 1,
+        limit: 50,
+        page: 1,
       });
     }
 
@@ -135,7 +135,8 @@ class ProfilePage extends Component {
                       style={{
                         width: "80px",
                         height: "80px",
-                        backgroundColor: this.state.userIconColor,
+                        // backgroundColor: this.state.userIconColor,
+                        background: `linear-gradient(45deg, ${this.state.userIconColor} 30%, #f4a261 90%)`,
                       }}
                     >
                       {this.state.firstname[0] + this.state.surname[0]}
@@ -218,6 +219,7 @@ class ProfilePage extends Component {
                           curruser={this.props.auth}
                           _post={post._id}
                           username={post.username}
+                          _user={post._user}
                         />
                       );
                     }
@@ -242,6 +244,7 @@ class ProfilePage extends Component {
                           curruser={this.props.auth}
                           _post={post._id}
                           username={post.username}
+                          _user={post._user}
                         />
                       );
                     }
@@ -266,6 +269,7 @@ class ProfilePage extends Component {
                           curruser={this.props.auth}
                           _post={post._id}
                           username={post.username}
+                          _user={post._user}
                         />
                       );
                     }

@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 class NewsFeed extends Component {
   state = {
     posts: [],
-    limit: 50,
+    limit: 48,
     page: 1,
     loading: true,
   };
@@ -38,6 +38,7 @@ class NewsFeed extends Component {
   };
 
   render() {
+    console.log("newsfeed", this.state.posts);
     if (this.state.loading) {
       return (
         <div>
@@ -96,6 +97,7 @@ class NewsFeed extends Component {
                           curruser={this.props.auth}
                           _post={post._id}
                           username={post.username}
+                          _user={post._user}
                         />
                       );
                     }
@@ -120,6 +122,7 @@ class NewsFeed extends Component {
                           curruser={this.props.auth}
                           _post={post._id}
                           username={post.username}
+                          _user={post._user}
                         />
                       );
                     }
@@ -144,6 +147,7 @@ class NewsFeed extends Component {
                           curruser={this.props.auth}
                           _post={post._id}
                           username={post.username}
+                          _user={post._user}
                         />
                       );
                     }

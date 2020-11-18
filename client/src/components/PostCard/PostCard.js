@@ -13,11 +13,92 @@ import moment from "moment";
 import Linkify from "react-linkify";
 import ThumbUpIcon from "@material-ui/icons/ThumbUp";
 import ThumbDownIcon from "@material-ui/icons/ThumbDown";
+import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
+import Popover from "@material-ui/core/Popover";
 import axios from "axios";
 import { Link, withRouter } from "react-router-dom";
-import Popover from "@material-ui/core/Popover";
+import { ReactTinyLink } from "react-tiny-link";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
+import Divider from "@material-ui/core/Divider";
+import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+import DeleteIcon from "@material-ui/icons/Delete";
+import PersonAddIcon from "@material-ui/icons/PersonAdd";
+import PersonAddDisabledIcon from "@material-ui/icons/PersonAddDisabled";
+import ShareIcon from "@material-ui/icons/Share";
+import LinkedInIcon from "@material-ui/icons/LinkedIn";
+import RedditIcon from "@material-ui/icons/Reddit";
+import TwitterIcon from "@material-ui/icons/Twitter";
+import WhatsAppIcon from "@material-ui/icons/WhatsApp";
+import {
+  FacebookShareButton,
+  LinkedinShareButton,
+  RedditShareButton,
+  TwitterShareButton,
+  WhatsappShareButton,
+} from "react-share";
+import FacebookIcon from "@material-ui/icons/Facebook";
+
+const urlRegex = require("url-regex");
 class PostCard extends Component {
-  MAX_WIDTH = window.innerWidth > 760 ? 250 : 100;
+  MAX_WIDTH = window.innerWidth > 560 ? 200 : 280;
+  SHARE_POP_WIDTH = window.innerWidth / 2;
+  SHARE_POP_HEIGHT = window.innerHeight / 4;
+  LINK = `http://locahost:3000/post/${this.props._post}`;
+
+  SHARE_LIST = [
+    {
+      button: (
+        <FacebookShareButton url={this.LINK} quote={this.props.posttitle}>
+          <FacebookIcon
+            style={{ fontSize: "32px", float: "left", color: "#3b5998" }}
+          />
+        </FacebookShareButton>
+      ),
+      name: "Facebook",
+    },
+    {
+      button: (
+        <LinkedinShareButton url={this.LINK} quote={this.props.posttitle}>
+          <LinkedInIcon
+            style={{ fontSize: "32px", float: "left", color: "#0e76a8" }}
+          />
+        </LinkedinShareButton>
+      ),
+      name: "Linkedin",
+    },
+    {
+      button: (
+        <RedditShareButton url={this.LINK} quote={this.props.posttitle}>
+          <RedditIcon
+            style={{ fontSize: "32px", float: "left", color: "#FF4500" }}
+          />
+        </RedditShareButton>
+      ),
+      name: "Reddit",
+    },
+    {
+      button: (
+        <TwitterShareButton url={this.LINK} quote={this.props.posttitle}>
+          <TwitterIcon
+            style={{ fontSize: "32px", float: "left", color: "#00acee" }}
+          />
+        </TwitterShareButton>
+      ),
+      name: "Twitter",
+    },
+    {
+      button: (
+        <WhatsappShareButton url={this.LINK} quote={this.props.posttitle}>
+          <WhatsAppIcon
+            style={{ fontSize: "32px", float: "left", color: "#4FCE5D" }}
+          />
+        </WhatsappShareButton>
+      ),
+      name: "Whatsapp",
+    },
+  ];
 
   state = {
     createddate: null,
@@ -33,8 +114,32 @@ class PostCard extends Component {
     uservotedvalue: null,
     popoveropen: false,
     username: "",
+    shareLinks: [],
+    moreLink: false,
+    anchorEl: null,
+    moreLinkId: undefined,
+    _user: "",
+    shareLinkPop: false,
+  };
+
+  handleClose = () => {
+    this.setState({ moreLink: false, anchorEl: null, moreLinkId: undefined });
+  };
+  openMoreLinkPop = (event) => {
+    this.setState({
+      moreLink: true,
+      anchorEl: event.currentTarget,
+      moreLinkId: "simple-popover",
+    });
+  };
+  shareLinkPop = () => {
+    this.setState({ shareLinkPop: true, moreLink: false });
+  };
+  handleshareLinkClose = () => {
+    this.setState({ shareLinkPop: false });
   };
   componentDidMount() {
+    let isLink = urlRegex().test(this.props.posttitle);
     moment.updateLocale("en", null);
     this.setState({
       createddate: moment(new Date(this.props.createddate)).format("MM/DD/YY"),
@@ -49,11 +154,12 @@ class PostCard extends Component {
       userIconColor: this.props.userIconColor,
       uservotedvalue: this.props.uservotedvalue,
       username: this.props.username,
+      shareLinks: isLink === true ? this.props.posttitle.match(urlRegex()) : [],
+      _user: this.props._user,
     });
   }
 
   votePost = async (value) => {
-    console.log("post", this.props.curruser, this.state);
     if (this.props.curruser === null || this.props.curruser === false) {
       this.props.history.push("/");
     }
@@ -100,8 +206,6 @@ class PostCard extends Component {
         });
       }
     }
-
-    //console.log(response);
   };
 
   render() {
@@ -115,7 +219,8 @@ class PostCard extends Component {
                   style={{
                     width: "55px",
                     height: "55px",
-                    backgroundColor: this.state.userIconColor,
+                    //backgroundColor: this.state.userIconColor,
+                    background: `linear-gradient(45deg, ${this.state.userIconColor} 30%, #f4a261 90%)`,
                   }}
                 >
                   {this.state.firstname[0] + this.state.surname[0]}
@@ -144,6 +249,27 @@ class PostCard extends Component {
           <CardContent style={{ paddingTop: "0px", paddingBottom: "0px" }}>
             <div className="post__title">
               <Linkify>{this.state.posttitle}</Linkify>
+            </div>
+            <div>
+              {this.state.shareLinks.length === 1
+                ? this.state.shareLinks.map((link, index) => {
+                    if (index === 0) {
+                      return (
+                        <ReactTinyLink
+                          key={index}
+                          showGraphic={true}
+                          maxLine={2}
+                          minLine={1}
+                          description=""
+                          proxyUrl="https://fakrnews-cors-proxy.herokuapp.com"
+                          url={link}
+                          autoPlay={true}
+                        />
+                      );
+                    }
+                    return null;
+                  })
+                : null}
             </div>
           </CardContent>
 
@@ -177,6 +303,9 @@ class PostCard extends Component {
                         ).toFixed(2) + "px",
                 }}
               ></div>
+              <div style={{ fontSize: "12px" }}>
+                Votes: {this.state.votecount[1]}
+              </div>
             </div>
             <div style={{ flex: "1", paddingTop: "10px" }}>
               <div
@@ -207,6 +336,9 @@ class PostCard extends Component {
                         ).toFixed(2) + "px",
                 }}
               ></div>
+              <div style={{ fontSize: "12px" }}>
+                Votes: {this.state.votecount[0]}
+              </div>
             </div>
             <div style={{ marginTop: "10px" }}>
               <Grid container>
@@ -221,7 +353,7 @@ class PostCard extends Component {
                     style={{
                       //backgroundColor: "#007ee5",
                       color:
-                        this.state.uservotedvalue === 1 ? "green" : "#007ee5",
+                        this.state.uservotedvalue === 1 ? "#379683" : "#007ee5",
                       borderRadius: "20px",
                       fontWeight: "800",
                     }}
@@ -230,13 +362,13 @@ class PostCard extends Component {
                     <ThumbUpIcon />
                   </IconButton>
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={8}>
                   <IconButton
                     variant="outlined"
                     style={{
                       //backgroundColor: "#007ee5",
                       color:
-                        this.state.uservotedvalue === 0 ? "green" : "#007ee5",
+                        this.state.uservotedvalue === 0 ? "#379683" : "#007ee5",
                       borderRadius: "20px",
                       fontWeight: "800",
                       borderRadius: "20px",
@@ -245,6 +377,103 @@ class PostCard extends Component {
                   >
                     <ThumbDownIcon />
                   </IconButton>
+                </Grid>
+                <Grid item xs={2}>
+                  <IconButton
+                    variant="outlined"
+                    style={
+                      {
+                        //backgroundColor: "#007ee5",
+                        // color:
+                        //   this.state.uservotedvalue === 0 ? "#379683" : "#007ee5",
+                        // borderRadius: "20px",
+                        // fontWeight: "800",
+                        // borderRadius: "20px",
+                      }
+                    }
+                    onClick={this.openMoreLinkPop}
+                  >
+                    <MoreHorizIcon />
+                  </IconButton>
+                  <Popover
+                    id={this.state.moreLinkId}
+                    open={this.state.moreLink}
+                    anchorEl={this.state.anchorEl}
+                    onClose={this.handleClose}
+                    anchorOrigin={{
+                      vertical: "top",
+                      horizontal: "left",
+                    }}
+                    transformOrigin={{
+                      vertical: "top",
+                      horizontal: "left",
+                    }}
+                  >
+                    <List component="nav" aria-label="mailbox folders">
+                      {this.state._user === this.props.curruser._id ? (
+                        <ListItem>
+                          <ListItemAvatar>
+                            <Avatar style={{ backgroundColor: "#F5F5F5" }}>
+                              <DeleteIcon style={{ color: "red" }} />
+                            </Avatar>
+                          </ListItemAvatar>
+                          <div style={{ color: "black", fontWeight: "bold" }}>
+                            Delete
+                          </div>
+                        </ListItem>
+                      ) : null}
+
+                      <ListItem
+                        style={{ cursor: "pointer" }}
+                        onClick={this.shareLinkPop}
+                      >
+                        <ListItemAvatar>
+                          <Avatar style={{ backgroundColor: "#F5F5F5" }}>
+                            <ShareIcon style={{ color: "#007ee5" }} />
+                          </Avatar>
+                        </ListItemAvatar>
+
+                        <div
+                          style={{
+                            color: "black",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          Share
+                        </div>
+                      </ListItem>
+                    </List>
+                  </Popover>
+                  <Popover
+                    id={this.state.moreLinkId}
+                    anchorReference="anchorPosition"
+                    open={this.state.shareLinkPop}
+                    //anchorEl={this.state.anchorEl}
+                    anchorPosition={{
+                      top: this.SHARE_POP_HEIGHT,
+                      left: this.SHARE_POP_WIDTH,
+                    }}
+                    onClose={this.handleshareLinkClose}
+                    anchorOrigin={{
+                      vertical: "top",
+                      horizontal: "center",
+                    }}
+                    transformOrigin={{
+                      vertical: "top",
+                      horizontal: "center",
+                    }}
+                  >
+                    <h3
+                      style={{ justifyContent: "center", textAlign: "center" }}
+                    >
+                      Share
+                    </h3>
+                    <List style={{ display: "flex" }}>
+                      {this.SHARE_LIST.map((item, index) => {
+                        return <ListItem>{item.button}</ListItem>;
+                      })}
+                    </List>
+                  </Popover>
                 </Grid>
               </Grid>
             </div>

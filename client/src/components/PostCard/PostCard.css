@@ -8,8 +8,9 @@
 .post__yes {
   height: 30px !important;
   /* width: 10px !important; */
-  background-color: #007ee5 !important;
-  box-shadow: 0.5px 0.5px 3px 0.1px black;
+  /* background-color: #007ee5 !important; */
+  background: linear-gradient(45deg, #e76f51 30%, #f4a261 90%);
+  box-shadow: 0.5px 0.5px 3px 0.1px grey;
   display: flex;
   align-items: center;
   justify-content: left;
@@ -20,8 +21,9 @@
 .post__no {
   height: 30px !important;
   /* width: 150px !important; */
-  background-color: #007ee5 !important;
-  box-shadow: 0.5px 0.5px 3px 0.1px black;
+  /* background-color: #007ee5 !important; */
+  background: linear-gradient(45deg, #e76f51 30%, #f4a261 90%);
+  box-shadow: 0.5px 0.5px 3px 0.1px grey;
   border-radius: 5px;
   display: flex;
   align-items: center;
