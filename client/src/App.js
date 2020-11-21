@@ -18,7 +18,7 @@ class App extends Component {
     return (
       <div>
         <BrowserRouter>
-          <Route path="/" exact component={HomePage} />
+          <Route path="/" exact render={() => <HomePage key={uuid()} />} />
           <Route path="/post/:id" exact component={PostDetails} />
           <Route
             path="/profile/:id"

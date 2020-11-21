@@ -87,7 +87,7 @@ class ProfilePage extends Component {
     if (this.state.loading) {
       return (
         <div>
-          <NavBar />
+          <NavBar auth={this.props.auth} />
           <br></br>
           <br></br>
           <br></br>
@@ -109,7 +109,7 @@ class ProfilePage extends Component {
     }
     return (
       <div>
-        <NavBar />
+        <NavBar auth={this.props.auth} />
         <br></br>
         <br></br>
         <br></br>

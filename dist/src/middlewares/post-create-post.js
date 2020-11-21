@@ -29,6 +29,8 @@ router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         userbio,
         username,
         userIconColor,
+        postcreateddate: new Date(),
+        postmodifeddate: new Date(),
     });
     try {
         newpost.save();

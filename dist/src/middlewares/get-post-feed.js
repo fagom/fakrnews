@@ -32,6 +32,11 @@ router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     };
     const dbres = yield PostModel.aggregate([
         {
+            $match: {
+                poststatus: "A",
+            },
+        },
+        {
             $skip: startindex,
         },
         {

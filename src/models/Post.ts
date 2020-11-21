@@ -4,8 +4,8 @@ const Schema = mongoose.Schema;
 
 const PostSchema = new Schema({
   posttitle: { type: String, required: true },
-  postcreateddate: { type: String, default: new Date() },
-  postmodifeddate: { type: String, default: new Date() },
+  postcreateddate: { type: String, default: Date.now },
+  postmodifeddate: { type: String, default: Date.now },
   poststatus: { type: String, default: "A" },
   _user: Schema.Types.ObjectId,
   fullname: { type: String, required: true },

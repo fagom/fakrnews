@@ -37,12 +37,21 @@ class NewsFeed extends Component {
     this.fetchData();
   };
 
+  deletePost = async (id) => {
+    let newposts = this.state.posts.filter((item, i) => item._id != id);
+    console.log(id, newposts);
+    const response = await axios.post("/api/post/delete", { _id: id });
+    if (response.status === 200) {
+      this.setState({ posts: newposts });
+    }
+  };
+
   render() {
     console.log("newsfeed", this.state.posts);
     if (this.state.loading) {
       return (
         <div>
-          <NavBar />
+          <NavBar auth={this.props.auth} />
           <br></br>
           <br></br>
           <br></br>
@@ -64,7 +73,7 @@ class NewsFeed extends Component {
     }
     return (
       <div>
-        <NavBar />
+        <NavBar auth={this.props.auth} />
         <br></br>
         <br></br>
         <br></br>
@@ -84,7 +93,7 @@ class NewsFeed extends Component {
                     if (index % 3 === 0) {
                       return (
                         <PostCard
-                          key={index}
+                          key={post._id}
                           fullname={post.fullname}
                           firstname={post.firstname}
                           surname={post.surname}
@@ -98,6 +107,7 @@ class NewsFeed extends Component {
                           _post={post._id}
                           username={post.username}
                           _user={post._user}
+                          deletePost={() => this.deletePost(post._id)}
                         />
                       );
                     }
@@ -109,7 +119,7 @@ class NewsFeed extends Component {
                     if (index % 3 === 1) {
                       return (
                         <PostCard
-                          key={index}
+                          key={post._id}
                           fullname={post.fullname}
                           firstname={post.firstname}
                           surname={post.surname}
@@ -123,6 +133,7 @@ class NewsFeed extends Component {
                           _post={post._id}
                           username={post.username}
                           _user={post._user}
+                          deletePost={() => this.deletePost(post._id)}
                         />
                       );
                     }
@@ -134,7 +145,7 @@ class NewsFeed extends Component {
                     if (index % 3 === 2) {
                       return (
                         <PostCard
-                          key={index}
+                          key={post._id}
                           fullname={post.fullname}
                           firstname={post.firstname}
                           surname={post.surname}
@@ -148,6 +159,7 @@ class NewsFeed extends Component {
                           _post={post._id}
                           username={post.username}
                           _user={post._user}
+                          deletePost={() => this.deletePost(post._id)}
                         />
                       );
                     }

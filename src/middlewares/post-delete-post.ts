@@ -18,6 +18,7 @@ router.post("/", async (req, res) => {
       existingPost.set("poststatus", "D");
       existingPost.set("__v", existingPost.get("__v") + 1);
       existingPost.save();
+      res.status(200).send({ data: "data deleted successfully" });
     } catch (e) {
       const errinstance = new ErrorClass(
         "ServerError",

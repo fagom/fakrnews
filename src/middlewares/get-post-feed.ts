@@ -23,6 +23,11 @@ router.post("/", async (req, res) => {
 
   const dbres = await PostModel.aggregate([
     {
+      $match: {
+        poststatus: "A",
+      },
+    },
+    {
       $skip: startindex,
     },
     {

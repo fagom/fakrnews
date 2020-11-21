@@ -9,7 +9,7 @@ const VoteSchema = new Schema({
     _post: Schema.Types.ObjectId,
     _user: Schema.Types.ObjectId,
     votevalue: Number,
-    createddate: { type: Date, default: new Date() },
-    modifeddate: { type: Date, default: new Date() },
+    createddate: { type: Date, default: Date.now },
+    modifeddate: { type: Date, default: Date.now },
 });
 module.exports = mongoose_1.default.model("Fkn_vote_details", VoteSchema, "Fkn_vote_details");

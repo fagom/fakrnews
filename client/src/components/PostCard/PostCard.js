@@ -3,6 +3,7 @@ import {
   Button,
   Card,
   CardContent,
+  DialogContent,
   Grid,
   IconButton,
 } from "@material-ui/core";
@@ -20,12 +21,8 @@ import { Link, withRouter } from "react-router-dom";
 import { ReactTinyLink } from "react-tiny-link";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import Divider from "@material-ui/core/Divider";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import DeleteIcon from "@material-ui/icons/Delete";
-import PersonAddIcon from "@material-ui/icons/PersonAdd";
-import PersonAddDisabledIcon from "@material-ui/icons/PersonAddDisabled";
 import ShareIcon from "@material-ui/icons/Share";
 import LinkedInIcon from "@material-ui/icons/LinkedIn";
 import RedditIcon from "@material-ui/icons/Reddit";
@@ -39,6 +36,8 @@ import {
   WhatsappShareButton,
 } from "react-share";
 import FacebookIcon from "@material-ui/icons/Facebook";
+import EditIcon from "@material-ui/icons/Edit";
+import Dialog from "@material-ui/core/Dialog";
 
 const urlRegex = require("url-regex");
 class PostCard extends Component {
@@ -107,7 +106,6 @@ class PostCard extends Component {
     firstname: "",
     surname: "",
     userIconColor: "",
-    createddate: "",
     posttitle: "",
     totalvotes: 0,
     votecount: [],
@@ -120,6 +118,7 @@ class PostCard extends Component {
     moreLinkId: undefined,
     _user: "",
     shareLinkPop: false,
+    deletePop: false,
   };
 
   handleClose = () => {
@@ -138,13 +137,24 @@ class PostCard extends Component {
   handleshareLinkClose = () => {
     this.setState({ shareLinkPop: false });
   };
+  deletePop = () => {
+    this.setState({ deletePop: true, moreLink: false });
+  };
+  handleDeletePopClose = () => {
+    this.setState({ deletePop: false });
+  };
+  deleteCard = () => {
+    this.setState({ deletePop: false });
+    this.props.deletePost();
+  };
   componentDidMount() {
     let isLink = urlRegex().test(this.props.posttitle);
     moment.updateLocale("en", null);
+
     this.setState({
-      createddate: moment(new Date(this.props.createddate)).format("MM/DD/YY"),
+      createddate: moment(new Date(this.props.createddate)).fromNow(), //format("MM/DD/YY"),
       fullname: this.props.fullname,
-      createddate: this.props.createddate,
+      //createddate: this.props.createddate,
       posttitle: this.props.posttitle,
       totalvotes: this.props.totalvotes,
       votecount: this.props.votecount,
@@ -208,6 +218,10 @@ class PostCard extends Component {
     }
   };
 
+  // deletePost = () => {
+  //   console.log(this.props._post);
+  // };
+
   render() {
     return (
       <div style={{ marginTop: "1em", padding: "10px" }}>
@@ -222,8 +236,9 @@ class PostCard extends Component {
                     //backgroundColor: this.state.userIconColor,
                     background: `linear-gradient(45deg, ${this.state.userIconColor} 30%, #f4a261 90%)`,
                   }}
+                  alt="FN"
                 >
-                  {this.state.firstname[0] + this.state.surname[0]}
+                  {this.state.firstname[0] + this.state.surname[0] || ""}
                 </Avatar>
                 <div
                   style={{
@@ -240,7 +255,7 @@ class PostCard extends Component {
                       fontWeight: "normal",
                     }}
                   >
-                    <Moment fromNow>{this.state.createddate}</Moment>
+                    {this.state.createddate}
                   </div>
                 </div>
               </div>
@@ -371,7 +386,6 @@ class PostCard extends Component {
                         this.state.uservotedvalue === 0 ? "#379683" : "#007ee5",
                       borderRadius: "20px",
                       fontWeight: "800",
-                      borderRadius: "20px",
                     }}
                     onClick={() => this.votePost(0)}
                   >
@@ -400,20 +414,26 @@ class PostCard extends Component {
                     open={this.state.moreLink}
                     anchorEl={this.state.anchorEl}
                     onClose={this.handleClose}
-                    anchorOrigin={{
+                    anchororigin={{
                       vertical: "top",
                       horizontal: "left",
                     }}
-                    transformOrigin={{
+                    transformorigin={{
                       vertical: "top",
                       horizontal: "left",
                     }}
                   >
                     <List component="nav" aria-label="mailbox folders">
                       {this.state._user === this.props.curruser._id ? (
-                        <ListItem>
+                        <ListItem
+                          style={{ cursor: "pointer" }}
+                          onClick={this.deletePop}
+                        >
                           <ListItemAvatar>
-                            <Avatar style={{ backgroundColor: "#F5F5F5" }}>
+                            <Avatar
+                              style={{ backgroundColor: "#F5F5F5" }}
+                              alt="FN"
+                            >
                               <DeleteIcon style={{ color: "red" }} />
                             </Avatar>
                           </ListItemAvatar>
@@ -428,7 +448,10 @@ class PostCard extends Component {
                         onClick={this.shareLinkPop}
                       >
                         <ListItemAvatar>
-                          <Avatar style={{ backgroundColor: "#F5F5F5" }}>
+                          <Avatar
+                            style={{ backgroundColor: "#F5F5F5" }}
+                            alt="FN"
+                          >
                             <ShareIcon style={{ color: "#007ee5" }} />
                           </Avatar>
                         </ListItemAvatar>
@@ -446,34 +469,97 @@ class PostCard extends Component {
                   </Popover>
                   <Popover
                     id={this.state.moreLinkId}
-                    anchorReference="anchorPosition"
+                    anchorreference="anchorPosition"
                     open={this.state.shareLinkPop}
                     //anchorEl={this.state.anchorEl}
-                    anchorPosition={{
+                    anchorposition={{
                       top: this.SHARE_POP_HEIGHT,
                       left: this.SHARE_POP_WIDTH,
                     }}
                     onClose={this.handleshareLinkClose}
-                    anchorOrigin={{
+                    anchororigin={{
                       vertical: "top",
                       horizontal: "center",
                     }}
-                    transformOrigin={{
+                    transformorigin={{
                       vertical: "top",
                       horizontal: "center",
                     }}
                   >
-                    <h3
-                      style={{ justifyContent: "center", textAlign: "center" }}
+                    <h2
+                      style={{
+                        justifyContent: "center",
+                        textAlign: "center",
+                        marginBottom: "0px",
+                      }}
                     >
                       Share
-                    </h3>
+                    </h2>
                     <List style={{ display: "flex" }}>
                       {this.SHARE_LIST.map((item, index) => {
-                        return <ListItem>{item.button}</ListItem>;
+                        return <ListItem key={index}>{item.button}</ListItem>;
                       })}
                     </List>
                   </Popover>
+                  <Dialog
+                    id={this.state.moreLinkId}
+                    anchorreference="anchorPosition"
+                    open={this.state.deletePop}
+                    //anchorEl={this.state.anchorEl}
+                    anchorposition={{
+                      top: this.SHARE_POP_HEIGHT,
+                      left: this.SHARE_POP_WIDTH,
+                    }}
+                    onClose={this.handleDeletePopClose}
+                    anchororigin={{
+                      vertical: "top",
+                      horizontal: "center",
+                    }}
+                    transformorigin={{
+                      vertical: "top",
+                      horizontal: "center",
+                    }}
+                  >
+                    <DialogContent dividers>
+                      <div
+                        style={{
+                          justifyContent: "center",
+                          textAlign: "center",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        Delete Post
+                      </div>
+                    </DialogContent>
+                    <DialogContent>
+                      <div>Are you sure you want to delete the post?</div>
+                    </DialogContent>
+                    <DialogContent>
+                      <Grid container>
+                        <Grid item xs={9}>
+                          <Button
+                            style={{
+                              color: "white",
+                              backgroundColor: "#dc2f02",
+                            }}
+                            onClick={this.deleteCard}
+                          >
+                            Yes
+                          </Button>
+                        </Grid>
+                        <Grid item xs={3}>
+                          <Button
+                            style={{
+                              color: "white",
+                              backgroundColor: "#007f5f",
+                            }}
+                          >
+                            No
+                          </Button>
+                        </Grid>
+                      </Grid>
+                    </DialogContent>
+                  </Dialog>
                 </Grid>
               </Grid>
             </div>

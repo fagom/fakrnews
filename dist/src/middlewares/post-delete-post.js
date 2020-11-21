@@ -29,6 +29,7 @@ router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             existingPost.set("poststatus", "D");
             existingPost.set("__v", existingPost.get("__v") + 1);
             existingPost.save();
+            res.status(200).send({ data: "data deleted successfully" });
         }
         catch (e) {
             const errinstance = new base_error_class_1.ErrorClass("ServerError", 500, "Oops something went wrong. Try again later");

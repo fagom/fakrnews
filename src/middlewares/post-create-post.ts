@@ -28,6 +28,8 @@ router.post("/", async (req, res) => {
     userbio,
     username,
     userIconColor,
+    postcreateddate: new Date(),
+    postmodifeddate: new Date(),
   });
   try {
     newpost.save();

@@ -25,6 +25,7 @@ router.post("/", async (req, res) => {
     {
       $match: {
         _user: ObjectId(_user),
+        poststatus: "A",
       },
     },
     {

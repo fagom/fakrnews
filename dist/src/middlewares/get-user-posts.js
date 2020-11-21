@@ -34,6 +34,7 @@ router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         {
             $match: {
                 _user: ObjectId(_user),
+                poststatus: "A",
             },
         },
         {
