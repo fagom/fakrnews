@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "2em",
     fontWeight: "bold",
     [theme.breakpoints.up("sm")]: {
-      fontSize: "2.5em",
+      fontSize: "2em",
       display: "inline-block",
       fontWeight: "bold",
       textAlign: "center",

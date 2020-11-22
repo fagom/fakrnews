@@ -17,7 +17,7 @@ class ProfilePage extends Component {
   COLORS = ["#007ee5", "#bd081c", "#ff6600", "#131418", "#410093"];
   state = {
     posts: [],
-    limit: 50,
+    limit: 48,
     page: 1,
     loading: true,
     firstname: "",
@@ -31,6 +31,7 @@ class ProfilePage extends Component {
     buttonDisable: false,
     userbio: "",
     usernameHelperText: "Username must be between 6 and 30 characters.",
+    moreLoading: true,
   };
   componentDidMount() {
     // this.setState({
@@ -56,7 +57,7 @@ class ProfilePage extends Component {
         userbio: userresp.data.userbio,
         userIconColor: userresp.data.userIconColor,
         editprofile: false,
-        limit: 50,
+        limit: 48,
         page: 1,
       });
     }
@@ -67,11 +68,45 @@ class ProfilePage extends Component {
       page: this.state.page,
     });
 
-    this.setState({
-      posts: response.data.result,
-      page: response.data.nextPage.page,
-      loading: false,
+    if (response.data.result.length > 0) {
+      this.setState((prevstate) => {
+        return {
+          posts: [...prevstate.posts, ...response.data.result],
+          page: response.data.nextPage.page,
+          loading: false,
+          moreLoading:
+            response.data.result.length < this.state.limit ? false : true,
+        };
+      });
+    } else {
+      this.setState({
+        moreLoading: false,
+      });
+    }
+  };
+
+  fetchPosts = async () => {
+    const response = await axios.post("/api/user/posts", {
+      _user: this.state._id,
+      limit: this.state.limit,
+      page: this.state.page,
     });
+
+    if (response.data.result.length > 0) {
+      this.setState((prevstate) => {
+        return {
+          posts: [...prevstate.posts, ...response.data.result],
+          page: response.data.nextPage.page,
+          loading: false,
+          moreLoading:
+            response.data.result.length < this.state.limit ? false : true,
+        };
+      });
+    } else {
+      this.setState({
+        moreLoading: false,
+      });
+    }
   };
 
   handleClose = () => {
@@ -84,6 +119,7 @@ class ProfilePage extends Component {
   };
 
   render() {
+    console.log("profile", this.state.posts);
     if (this.state.loading) {
       return (
         <div>
@@ -129,6 +165,7 @@ class ProfilePage extends Component {
                     style={{
                       display: "flex",
                       float: "center",
+                      padding: "5px",
                     }}
                   >
                     <Avatar
@@ -195,10 +232,18 @@ class ProfilePage extends Component {
                     </div>
                   </div>
                 </Grid>
-                <Grid item xs={12}>
-                  <h3>Activity</h3>
+                <Grid
+                  item
+                  xs={12}
+                  style={{ paddingLeft: "10px", marginBottom: "0px" }}
+                >
+                  <h2 style={{ marginBottom: "0px" }}>Activity</h2>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid
+                  item
+                  xs={12}
+                  style={{ marginTop: "0px", paddingTop: "0px" }}
+                >
                   {this.state.posts.length === 0 ? "No Posts yet." : ""}
                 </Grid>
                 <Grid item xs={12} md={4} lg={4}>
@@ -206,7 +251,7 @@ class ProfilePage extends Component {
                     if (index % 3 === 0) {
                       return (
                         <PostCard
-                          key={index}
+                          key={post._id}
                           fullname={post.fullname}
                           firstname={post.firstname}
                           surname={post.surname}
@@ -231,7 +276,7 @@ class ProfilePage extends Component {
                     if (index % 3 === 1) {
                       return (
                         <PostCard
-                          key={index}
+                          key={post._id}
                           fullname={post.fullname}
                           firstname={post.firstname}
                           surname={post.surname}
@@ -256,7 +301,7 @@ class ProfilePage extends Component {
                     if (index % 3 === 2) {
                       return (
                         <PostCard
-                          key={index}
+                          key={post._id}
                           fullname={post.fullname}
                           firstname={post.firstname}
                           surname={post.surname}
@@ -277,6 +322,116 @@ class ProfilePage extends Component {
                   })}
                 </Grid>
               </Grid>
+            </Grid>
+            <Grid item xs={12} md={9}>
+              <Grid container>
+                <Grid item xs={12} md={4} lg={4}>
+                  {this.state.posts.map((post, index) => {
+                    if (index % 3 === 0) {
+                      return (
+                        <PostCard
+                          key={post._id}
+                          fullname={post.fullname}
+                          firstname={post.firstname}
+                          surname={post.surname}
+                          userIconColor={post.userIconColor}
+                          createddate={post.postmodifeddate}
+                          posttitle={post.posttitle}
+                          totalvotes={post.totalvotes}
+                          votecount={post.votecount}
+                          uservotedvalue={post.uservotedvalue}
+                          curruser={this.props.auth}
+                          _post={post._id}
+                          username={post.username}
+                          _user={post._user}
+                          deletePost={() => this.deletePost(post._id)}
+                        />
+                      );
+                    }
+                    return null;
+                  })}
+                </Grid>
+                <Grid item xs={12} md={4} lg={4}>
+                  {this.state.posts.map((post, index) => {
+                    if (index % 3 === 1) {
+                      return (
+                        <PostCard
+                          key={post._id}
+                          fullname={post.fullname}
+                          firstname={post.firstname}
+                          surname={post.surname}
+                          userIconColor={post.userIconColor}
+                          createddate={post.postmodifeddate}
+                          posttitle={post.posttitle}
+                          totalvotes={post.totalvotes}
+                          votecount={post.votecount}
+                          uservotedvalue={post.uservotedvalue}
+                          curruser={this.props.auth}
+                          _post={post._id}
+                          username={post.username}
+                          _user={post._user}
+                          deletePost={() => this.deletePost(post._id)}
+                        />
+                      );
+                    }
+                    return null;
+                  })}
+                </Grid>
+                <Grid item xs={12} md={4} lg={4}>
+                  {this.state.posts.map((post, index) => {
+                    if (index % 3 === 2) {
+                      return (
+                        <PostCard
+                          key={post._id}
+                          fullname={post.fullname}
+                          firstname={post.firstname}
+                          surname={post.surname}
+                          userIconColor={post.userIconColor}
+                          createddate={post.postmodifeddate}
+                          posttitle={post.posttitle}
+                          totalvotes={post.totalvotes}
+                          votecount={post.votecount}
+                          uservotedvalue={post.uservotedvalue}
+                          curruser={this.props.auth}
+                          _post={post._id}
+                          username={post.username}
+                          _user={post._user}
+                          deletePost={() => this.deletePost(post._id)}
+                        />
+                      );
+                    }
+                    return null;
+                  })}
+                </Grid>
+              </Grid>
+              {this.state.moreLoading === true ? (
+                <Grid container>
+                  <Grid
+                    item
+                    xs={12}
+                    style={{
+                      justifyContent: "center",
+                      alignItems: "center",
+                      textAlign: "center",
+                      marginBottom: "20px",
+                      marginTop: "20px",
+                    }}
+                  >
+                    <Button
+                      style={{
+                        fontSize: "12px",
+                        background:
+                          "linear-gradient(45deg, #e76f51 30%, #f4a261 90%)",
+                        color: "white",
+                        fontWeight: "500",
+                      }}
+                      onClick={this.fetchPosts}
+                    >
+                      Load More
+                    </Button>
+                  </Grid>
+                </Grid>
+              ) : null}
             </Grid>
             {/* <Grid item xs={12} md={2}></Grid> */}
           </Grid>

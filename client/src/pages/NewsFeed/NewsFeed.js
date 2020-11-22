@@ -1,5 +1,6 @@
-import { Grid } from "@material-ui/core";
+import { Button, Grid } from "@material-ui/core";
 import React, { Component } from "react";
+import ReactDOM from "react-dom";
 import NavBar from "../../components/NavBar/NavBar";
 import PostCard from "../../components/PostCard/PostCard";
 import SideNavBar from "../../components/SideNavBar/SideNavBar";
@@ -14,6 +15,7 @@ class NewsFeed extends Component {
     limit: 48,
     page: 1,
     loading: true,
+    moreLoading: true,
   };
   fetchData = async () => {
     const response = await axios.post("/api/post/feed", {
@@ -22,14 +24,38 @@ class NewsFeed extends Component {
       page: this.state.page,
     });
     console.log(response.data);
-    this.setState({
-      posts: response.data.result,
-      page: response.data.nextPage.page,
-      loading: false,
-    });
+    if (response.data.result.length > 0) {
+      this.setState((prevstate) => {
+        return {
+          posts: [...prevstate.posts, ...response.data.result],
+          page: response.data.nextPage.page,
+          loading: false,
+          moreLoading:
+            response.data.result.length < this.state.limit ? false : true,
+        };
+      });
+    } else {
+      this.setState({
+        moreLoading: false,
+      });
+    }
   };
+
+  // handleScroll = () => {
+  //   var lastLi = document.querySelector("div.MuiPaper-root > div:last-child");
+  //   console.log("lastLi", lastLi);
+  //   var lastLiOffset = lastLi.offsetTop + lastLi.clientHeight;
+  //   var pageOffset = window.pageYOffset + window.innerHeight;
+  //   if (pageOffset > lastLiOffset) {
+  //     this.fetchData();
+  //   }
+  // };
+
   componentDidMount() {
     this.fetchData();
+    // this.scrollListener = window.addEventListener("scroll", (e) => {
+    //   this.handleScroll(e);
+    // });
   }
 
   refreshScreen = () => {
@@ -167,6 +193,34 @@ class NewsFeed extends Component {
                   })}
                 </Grid>
               </Grid>
+              {this.state.moreLoading === true ? (
+                <Grid container>
+                  <Grid
+                    item
+                    xs={12}
+                    style={{
+                      justifyContent: "center",
+                      alignItems: "center",
+                      textAlign: "center",
+                      marginBottom: "20px",
+                      marginTop: "20px",
+                    }}
+                  >
+                    <Button
+                      style={{
+                        fontSize: "12px",
+                        background:
+                          "linear-gradient(45deg, #e76f51 30%, #f4a261 90%)",
+                        color: "white",
+                        fontWeight: "500",
+                      }}
+                      onClick={this.fetchData}
+                    >
+                      Load More
+                    </Button>
+                  </Grid>
+                </Grid>
+              ) : null}
             </Grid>
             {/* <Grid item xs={12} md={2}></Grid> */}
           </Grid>
