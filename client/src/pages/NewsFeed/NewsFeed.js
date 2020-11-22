@@ -8,6 +8,7 @@ import * as actions from "../../actions";
 import { connect } from "react-redux";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import Loading from "../../components/Loading/Loading";
 
 class NewsFeed extends Component {
   state = {
@@ -82,18 +83,29 @@ class NewsFeed extends Component {
           <br></br>
           <br></br>
           <br></br>
-          <Grid container>
-            <Grid item xs={12} md={4}>
-              <SideNavBar
-                auth={this.props.auth}
-                refreshScreen={this.refreshScreen}
-              />
+          <div>
+            <Grid container>
+              <Grid item xs={12} md={4} lg={2}>
+                <SideNavBar
+                  auth={this.props.auth}
+                  refreshScreen={this.refreshScreen}
+                />
+              </Grid>
+              <Grid item xs={12} md={9}>
+                <div
+                  style={{
+                    position: "absolute",
+                    left: "50%",
+                    top: "50%",
+                    transform: "translate(-50%, -50%)",
+                  }}
+                >
+                  <Loading />
+                </div>
+              </Grid>
+              <Grid item xs={12} md={4}></Grid>
             </Grid>
-            <Grid item xs={12} md={4}>
-              <h5>Loading....</h5>
-            </Grid>
-            <Grid item xs={12} md={4}></Grid>
-          </Grid>
+          </div>
         </div>
       );
     }

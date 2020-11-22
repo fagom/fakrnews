@@ -1,12 +1,25 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import Loading from "../../components/Loading/Loading";
 import FirstTimeLogin from "../FirstTimeLogin/FirstTimeLogin";
 import LoginPage from "../LoginPage/LoginPage";
 import NewsFeed from "../NewsFeed/NewsFeed";
 class HomePage extends Component {
   renderContent() {
     if (this.props.auth === null) {
-      return <div>Please wait....Loading Content</div>;
+      return (
+        <div
+          style={{
+            position: "absolute",
+            left: "50%",
+            top: "50%",
+            transform: "translate(-50%, -50%)",
+          }}
+        >
+          {" "}
+          <Loading />{" "}
+        </div>
+      );
     } else if (this.props.auth === false) {
       return (
         <div>

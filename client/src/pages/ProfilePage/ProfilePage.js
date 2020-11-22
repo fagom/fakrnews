@@ -12,6 +12,7 @@ import FirstTimeLogin from "../FirstTimeLogin/FirstTimeLogin";
 
 import { connect } from "react-redux";
 import axios from "axios";
+import Loading from "../../components/Loading/Loading";
 
 class ProfilePage extends Component {
   COLORS = ["#007ee5", "#bd081c", "#ff6600", "#131418", "#410093"];
@@ -136,7 +137,16 @@ class ProfilePage extends Component {
               />
             </Grid>
             <Grid item xs={12} md={4}>
-              <h5>Loading....</h5>
+              <div
+                style={{
+                  position: "absolute",
+                  left: "50%",
+                  top: "50%",
+                  transform: "translate(-50%, -50%)",
+                }}
+              >
+                <Loading />
+              </div>
             </Grid>
             <Grid item xs={12} md={4}></Grid>
           </Grid>
